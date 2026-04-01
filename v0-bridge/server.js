@@ -44,7 +44,7 @@ app.post("/generate", async (req, res) => {
 
     // Create a chat with the prompt
     const chat = await v0.chats.create({
-      prompt: fullPrompt,
+      message: fullPrompt,
       ...(system && { systemPrompt: system }),
     });
 
