@@ -54,10 +54,10 @@ app.post("/generate", async (req, res) => {
     // Get the latest version files
     let files = [];
     try {
-      const versions = await v0.chats.findVersions(chatId);
+      const versions = await v0.chats.findVersions({ chatId });
       if (versions && versions.length > 0) {
         const latestVersion = versions[versions.length - 1];
-        const downloaded = await v0.chats.downloadVersion(chatId, latestVersion.id || latestVersion.versionId);
+        const downloaded = await v0.chats.downloadVersion({ chatId, versionId: latestVersion.id || latestVersion.versionId });
         if (downloaded) {
           files = Object.entries(downloaded).map(([path, content]) => ({
             path,
@@ -72,7 +72,7 @@ app.post("/generate", async (req, res) => {
     // Get messages
     let messages = [];
     try {
-      const msgs = await v0.chats.findMessages(chatId);
+      const msgs = await v0.chats.findMessages({ chatId });
       if (msgs) {
         messages = msgs
           .filter((m) => m.role === "assistant")
@@ -111,15 +111,15 @@ app.post("/iterate", async (req, res) => {
     console.log(`[iterate] chatId=${chatId}: ${feedback.substring(0, 100)}...`);
 
     // Send follow-up message
-    await v0.chats.sendMessage(chatId, { content: feedback });
+    await v0.chats.sendMessage({ chatId, message: feedback });
 
     // Get updated files
     let files = [];
     try {
-      const versions = await v0.chats.findVersions(chatId);
+      const versions = await v0.chats.findVersions({ chatId });
       if (versions && versions.length > 0) {
         const latest = versions[versions.length - 1];
-        const downloaded = await v0.chats.downloadVersion(chatId, latest.id || latest.versionId);
+        const downloaded = await v0.chats.downloadVersion({ chatId, versionId: latest.id || latest.versionId });
         if (downloaded) {
           files = Object.entries(downloaded).map(([path, content]) => ({
             path,
@@ -134,7 +134,7 @@ app.post("/iterate", async (req, res) => {
     // Get latest messages
     let messages = [];
     try {
-      const msgs = await v0.chats.findMessages(chatId);
+      const msgs = await v0.chats.findMessages({ chatId });
       if (msgs) {
         messages = msgs
           .filter((m) => m.role === "assistant")
@@ -157,7 +157,7 @@ app.post("/iterate", async (req, res) => {
  */
 app.get("/chat/:chatId", async (req, res) => {
   try {
-    const chat = await v0.chats.getById(req.params.chatId);
+    const chat = await v0.chats.getById({ chatId: req.params.chatId });
     if (!chat) {
       return res.status(404).json({ error: "Chat not found" });
     }
@@ -172,15 +172,15 @@ app.get("/chat/:chatId", async (req, res) => {
  */
 app.get("/chat/:chatId/files", async (req, res) => {
   try {
-    const versions = await v0.chats.findVersions(req.params.chatId);
+    const versions = await v0.chats.findVersions({ chatId: req.params.chatId });
     if (!versions || versions.length === 0) {
       return res.json({ files: [] });
     }
     const latest = versions[versions.length - 1];
-    const downloaded = await v0.chats.downloadVersion(
-      req.params.chatId,
-      latest.id || latest.versionId
-    );
+    const downloaded = await v0.chats.downloadVersion({
+      chatId: req.params.chatId,
+      versionId: latest.id || latest.versionId,
+    });
     const files = downloaded
       ? Object.entries(downloaded).map(([path, content]) => ({
           path,
