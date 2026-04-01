@@ -1,0 +1,15 @@
+[Unit]
+Description=v0-bridge — v0.dev SDK HTTP wrapper
+After=network.target
+
+[Service]
+Type=simple
+User=nayana
+WorkingDirectory=/opt/mcp-v0-server/v0-bridge
+EnvironmentFile=/opt/mcp-v0-server/.env
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

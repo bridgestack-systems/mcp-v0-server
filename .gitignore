@@ -1,0 +1,4 @@
+node_modules/
+dist/
+.env
+v0-bridge/node_modules/

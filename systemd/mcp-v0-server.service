@@ -1,0 +1,16 @@
+[Unit]
+Description=MCP v0.dev UI Generator Server
+After=network.target v0-bridge.service
+Wants=v0-bridge.service
+
+[Service]
+Type=simple
+User=nayana
+WorkingDirectory=/opt/mcp-v0-server
+EnvironmentFile=/opt/mcp-v0-server/.env
+ExecStart=/usr/bin/node dist/index.js
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

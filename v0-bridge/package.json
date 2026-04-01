@@ -1,0 +1,13 @@
+{
+  "name": "v0-bridge",
+  "version": "1.0.0",
+  "description": "Bridge service — exposes v0 SDK to Python agents via HTTP",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "v0-sdk": "^0.16.4",
+    "express": "^4.21.0"
+  }
+}
