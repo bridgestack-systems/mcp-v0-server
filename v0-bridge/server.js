@@ -12,10 +12,19 @@
  *   GET  /health         — health check
  */
 
+import * as Sentry from "@sentry/node";
 import express from "express";
 import { createClient } from "v0-sdk";
 
+Sentry.init({
+  dsn: process.env.SENTRY_DSN || "https://0556abaa1ee759f93c91f032cd810998@sentry.bridgestack.systems/29",
+  environment: process.env.SENTRY_ENVIRONMENT || "production",
+  tracesSampleRate: 1.0,
+  profilesSampleRate: 1.0,
+});
+
 const app = express();
+Sentry.setupExpressErrorHandler(app);
 app.use(express.json({ limit: "5mb" }));
 
 const PORT = process.env.V0_BRIDGE_PORT || 3100;
